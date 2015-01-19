@@ -1,0 +1,50 @@
+﻿@model PagedList.IPagedList<Blog.Models.BlogEntry>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+@{
+    ViewBag.Title = "Entries";
+}
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#par1').fadeIn(3000)
+    })
+</script>
+
+<div class="jumbotron" style="background-color:rgba(98, 172, 252, 0.76); color:#ffffff">
+    <h2>Welcome on my first ASP .NET Blog!</h2>
+    <p id="par1" style="display:none">To create new entry login to your account!</p>
+</div>
+
+<div class="container">
+    @foreach (var blog in Model)
+    {
+        if (blog.Title != null && blog.Entry != null)
+        {
+            <div style="width:auto; max-width:650px; width:75%" >
+
+                <div class="container" style="font-size:36px; color:black; font-family:helvetica; ">
+                    @Html.ActionLink(@blog.Title, "Index", "ShowEntry", new { id = blog.ID }, new { style = "color:rgba(98, 172, 252, 0.76; fontsize:36; fontfamily:helvetica" })
+                </div>
+                <div style="margin-left:15px; max-height:350px">
+                    <p class="text-muted">@blog.UserName</p>
+                    @if (blog.Entry.Length > 500)
+                    {
+                        <p><span>@Html.Raw(blog.Entry.Remove(500))...</span></p>
+                    }
+                    else
+                    {
+                        <p><span>@Html.Raw(blog.Entry)</span></p>
+                    }
+                    <p class="text-muted">@blog.EntryDate</p>
+                </div>
+            </div>
+        }
+
+    }
+</div>
+<div class="container" style="text-align:center">
+    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+</div>
