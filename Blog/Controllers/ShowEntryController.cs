@@ -22,7 +22,7 @@ namespace Blog.Controllers
             BlogEntry blogEntry = db.BlogEntries.Find(id);
             if (blogEntry == null)
             {
-                return HttpNotFound();
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
             return View(blogEntry);
         }
