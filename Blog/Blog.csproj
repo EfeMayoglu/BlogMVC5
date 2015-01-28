@@ -23,7 +23,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
-    <NuGetPackageImportStamp>2938f5fe</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>f3337754</NuGetPackageImportStamp>
     <ApplicationInsightsResourceId>/subscriptions/8c9e611e-faf5-4c33-aa55-949f494e70e5/resourcegroups/Default-ApplicationInsights-CentralUS/providers/microsoft.insights/components/Blog</ApplicationInsightsResourceId>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
@@ -427,7 +427,9 @@
     <Content Include="Scripts\tinymce\tinymce.js" />
     <Content Include="Scripts\tinymce\tinymce.min.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
