@@ -12,23 +12,21 @@ namespace Blog.Controllers
     {
         private BlogEntriesDbContext db = new BlogEntriesDbContext();
         
-        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
+        public ActionResult Index(int? page)
         {
-            ViewBag.CurrentSort = sortOrder;
-
-            if (searchString != null)
-                page = 1;
-            else
-                searchString = currentFilter;
-
-            ViewBag.CurrentFilter = searchString;
-
+           
             var entries = from s in db.BlogEntries select s;
             entries = entries.OrderByDescending(s => s.EntryDate);
             int pageSize = 10;
             int pageNumber = (page ?? 1);
-
-            return View(entries.ToPagedList(pageNumber, pageSize));
+            try
+            {
+                return View(entries.ToPagedList(pageNumber, pageSize));
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                throw ex;
+            }
         }
 
         public ActionResult About()

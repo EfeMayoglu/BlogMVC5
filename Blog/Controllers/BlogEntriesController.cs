@@ -14,7 +14,7 @@ namespace Blog.Controllers
     public class BlogEntriesController : Controller
     {
         private BlogEntriesDbContext db = new BlogEntriesDbContext();
-        private RegisterViewModel reg = new RegisterViewModel();
+
 
         // GET: BlogEntries
         public ActionResult Index()
@@ -52,7 +52,11 @@ namespace Blog.Controllers
         {
             if (ModelState.IsValid)
             {
-                blogEntry.UserName = User.Identity.Name;
+                if (User.Identity.IsAuthenticated)
+                    blogEntry.UserName = User.Identity.Name;
+                else
+                    blogEntry.UserName = "Null";
+
                 blogEntry.EntryDate = System.DateTime.Now;
                 db.BlogEntries.Add(blogEntry);
                 db.SaveChanges();
