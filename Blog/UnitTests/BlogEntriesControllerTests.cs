@@ -32,7 +32,6 @@ namespace Blog.UnitTests
                 new BlogEntry {ID=4, Entry="TestEntry", EntryDate=DateTime.Now, Title="TestTitle", UserName="TestUser"},
             }.AsQueryable();
 
-            var fakeEntry = A.Fake<DbSet<BlogEntry>>();
             var fakeContext = A.Fake<BlogEntriesDbContext>();
 
             fakeContext.BlogEntries.AddRange(data);
