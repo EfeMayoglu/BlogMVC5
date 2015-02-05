@@ -22,7 +22,7 @@ namespace Blog.UnitTests
         private BlogEntriesController _blogEntrCtrlr = new BlogEntriesController();
 
         [Fact]
-        private void Return_View_Index()
+        private void Return_View_Index_Returns_Full_List()
         {
             var data = new List<BlogEntry>
             {
@@ -39,6 +39,8 @@ namespace Blog.UnitTests
             var result = data.ToList();
             var viewResult = _blogEntrCtrlr.Index() as ViewResult;
 
+            
+            //Assert.Equal("Index", viewResult.ViewName);
             Assert.Equal(4, result.Count);
         }
 
