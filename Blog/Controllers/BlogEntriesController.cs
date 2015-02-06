@@ -1,25 +1,30 @@
 ﻿using System;
-using Microsoft.AspNet.Identity;
 using System.Collections.Generic;
 using System.Data;
+using Microsoft.AspNet.Identity;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Blog.Models;
+using Blog.Service;
 
 namespace Blog.Controllers
 {
     public class BlogEntriesController : Controller
     {
-        private BlogEntriesDbContext db = new BlogEntriesDbContext();
+        IBlogEntryService blogEntryService;
 
+        public BlogEntriesController(IBlogEntryService BlogEntryService)
+        {
+            blogEntryService = BlogEntryService;
+        }
 
         // GET: BlogEntries
         public ActionResult Index()
         {
-            return View(db.BlogEntries.ToList());
+            return View(blogEntryService.SelectAll());
         }
 
         // GET: BlogEntries/Details/5
@@ -29,7 +34,7 @@ namespace Blog.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            BlogEntry blogEntry = db.BlogEntries.Find(id);
+            BlogEntry blogEntry = blogEntryService.GetById(id);
             if (blogEntry == null)
             {
                 return HttpNotFound();
@@ -48,21 +53,13 @@ namespace Blog.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Title,Entry")] BlogEntry blogEntry)
+        public ActionResult Create(BlogEntry blogEntry)
         {
             if (ModelState.IsValid)
             {
-                if (User.Identity.IsAuthenticated)
-                    blogEntry.UserName = User.Identity.Name;
-                else
-                    blogEntry.UserName = "Null";
-
-                blogEntry.EntryDate = System.DateTime.Now;
-                db.BlogEntries.Add(blogEntry);
-                db.SaveChanges();
+                blogEntryService.Create(blogEntry);
                 return RedirectToAction("Index", "Home");
             }
-
             return View(blogEntry);
         }
 
@@ -73,7 +70,7 @@ namespace Blog.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            BlogEntry blogEntry = db.BlogEntries.Find(id);
+            BlogEntry blogEntry = blogEntryService.GetById(id);
             if (blogEntry == null)
             {
                 return HttpNotFound();
@@ -86,12 +83,11 @@ namespace Blog.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,UserName,Title,Entry,EntryDate")] BlogEntry blogEntry)
+        public ActionResult Edit(BlogEntry blogEntry)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(blogEntry).State = EntityState.Modified;
-                db.SaveChanges();
+                blogEntryService.Update(blogEntry);
                 return RedirectToAction("Index");
             }
             return View(blogEntry);
@@ -104,7 +100,7 @@ namespace Blog.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            BlogEntry blogEntry = db.BlogEntries.Find(id);
+            BlogEntry blogEntry = blogEntryService.GetById(id);
             if (blogEntry == null)
             {
                 return HttpNotFound();
@@ -117,19 +113,9 @@ namespace Blog.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            BlogEntry blogEntry = db.BlogEntries.Find(id);
-            db.BlogEntries.Remove(blogEntry);
-            db.SaveChanges();
+            BlogEntry blogEntry = blogEntryService.GetById(id);
+            blogEntryService.Delete(blogEntry);
             return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }

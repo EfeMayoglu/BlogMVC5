@@ -5,17 +5,23 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using PagedList;
+using Blog.Service;
 
 namespace Blog.Controllers
 {
     public class HomeController : Controller
     {
-        private BlogEntriesDbContext db = new BlogEntriesDbContext();
+        IBlogEntryService blogEntryService;
+
+        public HomeController(IBlogEntryService BlogEntryService)
+        {
+            blogEntryService = BlogEntryService;
+        }
         
         public ActionResult Index(int? page)
         {
-           
-            var entries = from s in db.BlogEntries select s;
+
+            var entries = blogEntryService.SelectAll();
             entries = entries.OrderByDescending(s => s.EntryDate);
             int pageSize = 10;
             int pageNumber = (page ?? 1);
