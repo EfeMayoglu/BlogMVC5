@@ -5,9 +5,8 @@ using System.Web.Mvc;
 
 namespace Blog.Models
 {
-    public class BlogEntry
+    public class BlogEntry : Entity<int>
     {
-        public int ID { get; set; }
         public string UserName { get; set; }
 
         [StringLength(50), Required(ErrorMessage = "Title required")]
@@ -20,10 +19,5 @@ namespace Blog.Models
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime EntryDate { get; set; }
-    }
-
-    public class BlogEntriesDbContext : DbContext
-    {
-        public DbSet<BlogEntry> BlogEntries { get; set; }
     }
 }
